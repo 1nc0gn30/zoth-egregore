@@ -207,6 +207,23 @@ def _make_handler(server: EgregoreServer):
                                 "archetype": l.archetype, "domain": l.domain,
                                 "stance": l.stance} for l in lenses],
                 })
+            if path in ("/v1/egregore/tools", "/tools.json"):
+                from .zoth_tools import detect_zoth_environment, match_tools_for_prompt
+                q = (qs.get("q") or [""])[0]
+                probe = (qs.get("probe") or ["0"])[0] in ("1", "true", "yes")
+                limit = max(1, min(14, int((qs.get("limit") or ["6"])[0])))
+                return self._send(200, {
+                    "environment": detect_zoth_environment(probe_daemons=probe),
+                    "matched_tools": match_tools_for_prompt(q, limit=limit, probe_local=probe),
+                })
+            if path in ("/v1/egregore/codex", "/codex.json"):
+                from .codex import codex_for_prompt
+                q = (qs.get("q") or [""])[0]
+                block, domains = codex_for_prompt(q)
+                return self._send(200, {
+                    "domains": domains,
+                    "codex": block,
+                })
             if path in ("/v1/egregore/stats", "/stats.json"):
                 return self._send(200, {**server.engine.stats(), "recent_runs": server.recent(),
                                         "uptime_s": round(time.time() - server.started, 1)})
@@ -428,9 +445,9 @@ footer a{{color:var(--acc);text-decoration:none}}
 <header>
   <div>
     <h1>E G R E G O R E <span style="font-size:11px;letter-spacing:.12em;vertical-align:middle;padding:3px 8px;border-radius:999px;border:1px solid rgba(255,180,84,.45);background:rgba(255,180,84,.12);color:var(--warn)">BETA &middot; v0.1.0-beta</span></h1>
-    <p class=sub>one OpenAI-compatible face &middot; 3,456 co-prime Pantheon lenses (24&times;18&times;8) &middot; Beta-posterior consensus</p>
+    <p class=sub>DeepSeek Flash &times; Nous Hermes &middot; 3,456 co-prime Pantheon lenses &middot; Design+Logic Codex &middot; Zoth Arsenal</p>
   </div>
-  <div class=pill>scout: {server.cfg.scout_model} &rarr; synth: {server.cfg.synth_model}</div>
+  <div class=pill>scout: {server.cfg.scout_model} &rarr; synth: {server.cfg.synth_model} &middot; tier: {st.get('zoth_environment', {}).get('tier', 'standalone')}</div>
 </header>
 <div class=grid>
   <div class=card><div class=k>model face</div><div class=v>{server.cfg.model_id}</div></div>

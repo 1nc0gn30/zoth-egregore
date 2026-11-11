@@ -41,11 +41,13 @@ from pathlib import Path
 
 from .budget import BudgetGuard
 from .cache import ResponseCache, call_digest
+from .codex import codex_for_prompt
 from .config import EgregoreConfig
 from .consensus import agreement_of, cluster_answers, medoid, stop_verdict
 from .lenses import Lens, coverage, expand
 from .providers import BaseProvider
 from .ratelimit import AdaptiveRateLimiter
+from .zoth_tools import build_tool_augmentation_block, detect_zoth_environment
 
 
 # ---------------------------------------------------------------------------
@@ -90,6 +92,8 @@ class EgregoreResult:
     cache_hits: int = 0
     distinct_answers: int = 0
     lens_coverage: dict = field(default_factory=dict)
+    codex_domains: list[str] = field(default_factory=list)
+    zoth_tools: list[dict] = field(default_factory=list)
     errors: int = 0
     synthesis_failed: bool = False
 
@@ -114,6 +118,8 @@ class EgregoreResult:
             "cache_hits": self.cache_hits,
             "distinct_answers": self.distinct_answers,
             "lens_coverage": self.lens_coverage,
+            "codex_domains": self.codex_domains,
+            "zoth_tools": self.zoth_tools,
             "errors": self.errors,
             "synthesis_failed": self.synthesis_failed,
         }
@@ -210,8 +216,22 @@ class Egregore:
         if mode is None:
             mode = "fixed" if agents else "auto"
 
-        result = EgregoreResult(text="", prompt=prompt, scout_model=cfg.scout_model,
-                                synth_model=cfg.synth_model)
+        codex_block, codex_domains = (
+            codex_for_prompt(prompt) if cfg.enable_codex else ("", [])
+        )
+        tool_block, matched_tools = (
+            build_tool_augmentation_block(prompt, probe_local=False)
+            if cfg.enable_zoth_tools else ("", [])
+        )
+
+        result = EgregoreResult(
+            text="",
+            prompt=prompt,
+            scout_model=cfg.scout_model,
+            synth_model=cfg.synth_model,
+            codex_domains=codex_domains,
+            zoth_tools=matched_tools,
+        )
         started_wall = time.monotonic()
         deadline = (started_wall + deadline_s) if deadline_s else None
 
@@ -247,7 +267,9 @@ class Egregore:
             wave_no += 1
 
             wave_t0 = time.time()
-            batch, budget_blocked = self._dispatch(lenses, prompt, deadline)
+            batch, budget_blocked = self._dispatch(
+                lenses, prompt, deadline, codex_block=codex_block, tool_block=tool_block
+            )
             answers.extend(batch)
             spawned += len(batch)
 
@@ -341,7 +363,8 @@ class Egregore:
                        "clusters": len(result.clusters), "agreement": round(result.agreement, 4)})
 
         final, synth_cost, synth_usage, synth_failed = self._synthesise(
-            prompt, texts, result.clusters, stream_cb=stream_cb)
+            prompt, texts, result.clusters, stream_cb=stream_cb,
+            codex_block=codex_block, tool_block=tool_block)
         result.synthesis_failed = synth_failed
         result.text = final or fallback
         result.cost_usd = sum(a.cost for a in answers) + synth_cost
@@ -364,7 +387,8 @@ class Egregore:
     # -- dispatch -----------------------------------------------------------
 
     def _dispatch(self, lenses: list[Lens], prompt: str,
-                  deadline: float | None) -> tuple[list[AgentAnswer], bool]:
+                  deadline: float | None, *, codex_block: str = "",
+                  tool_block: str = "") -> tuple[list[AgentAnswer], bool]:
         """Run one wave in parallel. Returns (answers, budget_blocked)."""
         cfg = self.cfg
         out: list[AgentAnswer] = [None] * len(lenses)  # type: ignore[list-item]
@@ -373,7 +397,7 @@ class Egregore:
 
         def task(i: int, lens: Lens) -> AgentAnswer:
             nonlocal budget_blocked
-            system = lens.system_prompt()
+            system = lens.system_prompt(codex_block=codex_block, tool_block=tool_block)
             messages = [{"role": "system", "content": system},
                         {"role": "user", "content": prompt}]
             model = cfg.scout_model_for(i)
@@ -509,12 +533,18 @@ class Egregore:
         return texts[medoid(texts, groups[0])]
 
     def _synthesise(self, prompt: str, texts: list[str], clusters: list[dict],
-                    stream_cb=None) -> tuple[str, float, dict, bool]:
+                    stream_cb=None, *, codex_block: str = "",
+                    tool_block: str = "") -> tuple[str, float, dict, bool]:
         cfg = self.cfg
         if not texts:
             return "", 0.0, {}, True
         if len(texts) == 1:
             return texts[0], 0.0, {}, False
+
+        synth_system = SYNTH_SYSTEM
+        extra_blocks = [b for b in (codex_block, tool_block) if b]
+        if extra_blocks:
+            synth_system = synth_system + "\n\n" + "\n\n".join(extra_blocks)
 
         positions = []
         for i, c in enumerate(clusters[:12], 1):
@@ -525,14 +555,14 @@ class Egregore:
             f"DELIBERATION: {len(texts)} distinct mind-answers collapsed into "
             f"{len(clusters)} positions.\n\n" + "\n\n".join(positions)
         )
-        messages = [{"role": "system", "content": SYNTH_SYSTEM},
+        messages = [{"role": "system", "content": synth_system},
                     {"role": "user", "content": body}]
 
         # The collapse is the single most expensive call in a run (pro model,
         # long prompt), so it gets the same treatment as the fan-out: an
         # identical repeat of the whole question should cost nothing at all.
         synth_tokens = max(cfg.max_tokens, 1200)
-        digest = call_digest(cfg.synth_model, SYNTH_SYSTEM, body, 0.3, synth_tokens)
+        digest = call_digest(cfg.synth_model, synth_system, body, 0.3, synth_tokens)
         if self.cache.enabled:
             hit = self.cache.get(digest)
             if hit is not None and hit[0]:
@@ -600,6 +630,7 @@ class Egregore:
             "budget": self.budget.snapshot(),
             "cache": self.cache.stats(),
             "provider": self.provider.stats(),
+            "zoth_environment": detect_zoth_environment(probe_daemons=False),
             "config": {
                 "scout_model": self.cfg.scout_model,
                 "synth_model": self.cfg.synth_model,
@@ -608,5 +639,7 @@ class Egregore:
                 "max_agents": self.cfg.max_agents,
                 "max_concurrency": self.cfg.max_concurrency,
                 "stop_agreement": self.cfg.stop_agreement,
+                "enable_codex": self.cfg.enable_codex,
+                "enable_zoth_tools": self.cfg.enable_zoth_tools,
             },
         }

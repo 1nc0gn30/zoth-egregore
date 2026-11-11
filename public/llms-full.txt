@@ -1,0 +1,34 @@
+# EGREGORE (zoth-egregore · v0.1.0-beta) — Complete Technical Specification
+
+- Canonical URL: https://zoth-egregore.netlify.app
+- Source Code: https://github.com/1nc0gn30/zoth-egregore
+- Creator: 1nc0gn30 (https://1nc0gn30.si) · NullAI Platform (https://nullai.tech)
+- License: MIT (100% Open Access)
+
+## 1. Thesis: Deliberation Depth as a Model Identifier
+Standard single-pass LLM calls sample one trajectory. Naive multi-agent frameworks force callers to learn custom graph SDKs and waste fixed budgets on easy questions. EGREGORE exposes a zero-dependency OpenAI-compatible HTTP server (`http://127.0.0.1:8147/v1`) where deliberation depth is encoded directly in the `model` string:
+- `zoth-egregore` — Adaptive mode: 8-mind seed wave, escalates geometrically (`×3.0`) only while disagreement persists.
+- `zoth-egregore:probe` — Fast single 8-mind seed wave + synthesis collapse.
+- `zoth-egregore:50` / `zoth-egregore:256` / `zoth-egregore:1000` — Fixed N-mind congress.
+- `zoth-egregore:max` — Escalates up to configured ceiling (`max_agents=1000`).
+
+## 2. DeepSeek Flash × Nous Hermes Backbone
+- **Primary Scout Model**: `deepseek/deepseek-v4.1-flash` routed via Nous Portal (`https://inference-api.nousresearch.com/v1`), DeepSeek API, or OpenRouter, reading `~/.hermes/auth.json` automatically when Nous Hermes Agent is installed.
+- **Synthesis Model**: `deepseek/deepseek-v4-pro` collapses clustered medoid positions into one direct, non-meta voice, incorporating valid minority objections while discarding repetitive majority phrasing.
+
+## 3. Orthogonal Co-Prime Pantheon (24 × 18 × 8 = 3,456)
+Because `3456 = 2^7 * 3^3`, any integer stride `s` with `s % 2 != 0` and `s % 3 != 0` satisfies `gcd(s, 3456) = 1`. EGREGORE hashes `(seed_prompt)` with SHA-256 to derive `(start, stride)` and walks `(start + k * stride) mod 3456`, guaranteeing every single agent up to 3,456 receives a provably distinct `(Archetype, Domain, Stance)` system identity.
+
+## 4. Adaptive-Consistency Beta Posterior & Medoid Fallback
+After each wave, answers are clustered by normalized unigram+bigram Jaccard similarity (`>= 0.55`). Given top cluster counts `V_1 >= V_2`, EGREGORE evaluates the exact regularized incomplete beta function via Lentz's continued fraction:
+`P(p_1 > p_2 | V_1, V_2) = 1 - I_{0.5}(V_1 + 1, V_2 + 1)`
+When `P >= 0.95` (with `>= 8` minds), escalation stops immediately with zero extra LLM judge calls. If the synthesis call fails or hits budget limits, EGREGORE returns the medoid of the largest cluster (`never worse than one model`).
+
+## 5. Design-Director & Formal-Logic Codex + Zoth 77-Tool Arsenal
+- `egregore/codex.py` equips minds with deductive logic invariants, 8pt spacing + APCA contrast UI judgment, GPU transform/opacity motion choreography rules, distributed backpressure patterns, and Ring-3 security hygiene.
+- `egregore/zoth_tools.py` detects local ZothOS (`/etc/zothos-release`) and Zoth Studio (`zoth.nullai.tech`) installations, surfacing live loopback daemons (`Neuro-Memory :8094`, `Adytum :8135`, `Swarm Multiplexer :8141`, `WCAG Contrast Guard :8150`, `HexStrike :8138`, `Zoth-Relay :8765`).
+
+## 6. Roadmap Status
+- **Tests**: Coming Soon (expanded multi-domain adversarial & live-wire test suite; 61 offline unit tests active in repo).
+- **Benchmarks**: Coming Soon (GPQA-Diamond, LiveCodeBench, SWE-bench, AlpacaEval 2.0, Design Rubric evaluations).
+- **HuggingFace**: Coming Soon (deliberation trace datasets & distilled Design+Logic adapters).

@@ -43,10 +43,11 @@ STATE_DIR = Path(os.environ.get("EGREGORE_STATE_DIR", HOME / ".local/state/egreg
 # different archetype/domain/stance each mind argues from), not from swapping
 # vendors under the swarm. The pool below is opt-in via EGREGORE_SCOUT_POOL.
 SCOUT_MODELS = [
+    "deepseek/deepseek-v4.1-flash",
+    "deepseek/deepseek-v4-flash",
     "stepfun/step-3.7-flash:free",
     "upstage/solar-mini4:free",
     "meituan/longcat-2.5:free",
-    "deepseek/deepseek-v4.1-flash",
     "z-ai/glm-5.3-flash",
     "google/gemini-3.5-flash-lite",
 ]
@@ -150,6 +151,8 @@ class EgregoreConfig:
     max_usd_per_day: float = 5.00
 
     # --- misc ---
+    enable_codex: bool = True
+    enable_zoth_tools: bool = True
     cache_enabled: bool = True
     cache_path: Path = field(default_factory=lambda: STATE_DIR / "cache.sqlite3")
     ledger_path: Path = field(default_factory=lambda: STATE_DIR / "ledger.jsonl")
@@ -160,8 +163,14 @@ class EgregoreConfig:
     def __post_init__(self) -> None:
         if not self.base_url or not self.api_key:
             base, key = discover_nous_credentials()
-            self.base_url = self.base_url or base or ""
-            self.api_key = self.api_key or key or ""
+            env_key = os.environ.get("NOUS_API_KEY") or os.environ.get("DEEPSEEK_API_KEY")
+            env_base = (
+                "https://inference-api.nousresearch.com/v1"
+                if os.environ.get("NOUS_API_KEY")
+                else ("https://api.deepseek.com/v1" if os.environ.get("DEEPSEEK_API_KEY") else None)
+            )
+            self.base_url = self.base_url or base or env_base or ""
+            self.api_key = self.api_key or key or env_key or ""
         self.base_url = self.base_url.rstrip("/")
 
     # -- construction helpers -------------------------------------------------

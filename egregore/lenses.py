@@ -108,18 +108,20 @@ class Lens:
         dom = next((w for w in self.domain.split() if w.lower() != "the"), self.domain).upper()
         return f"{self.archetype}·{dom}·{self.stance}"
 
-    def system_prompt(self) -> str:
-        return (
-            f"You are {self.archetype}, one mind within an egregore of many minds "
-            f"deliberating as one intelligence.\n"
+    def system_prompt(self, codex_block: str = "", tool_block: str = "") -> str:
+        base = (
+            f"You are {self.archetype}, one mind within EGREGORE — a DeepSeek Flash × Nous Hermes "
+            f"collective intelligence deliberating as one mind.\n"
             f"Your lens: {self.signature}\n"
             f"{ARCHETYPES[self.archetype]}\n"
             f"Your focus is {self.domain}.\n"
             f"{STANCES[self.stance]}\n\n"
-            "Rules: give your own substantive answer, not a meta-commentary about "
+            "Rules: give your own substantive answer, not meta-commentary about "
             "the question. 2-6 sentences. Do not say 'as an AI'. Do not open by "
             "restating the question. If you disagree with the obvious answer, say why."
         )
+        extras = [b for b in (codex_block.strip(), tool_block.strip()) if b]
+        return base if not extras else base + "\n\n" + "\n\n".join(extras)
 
 
 def _co_prime_stride(seed: int) -> int:

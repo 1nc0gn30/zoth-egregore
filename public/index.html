@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EGREGORE — DeepSeek Flash × Nous Hermes Deliberative AI Model &amp; Zoth Agent Engine</title>
+  <meta name="description" content="EGREGORE (v0.1.0-beta): One OpenAI-compatible model face backed by 3,456 co-prime DeepSeek Flash × Nous Hermes minds, Beta-posterior consensus stopping, a Design+Logic Codex, and 77 native ZothOS &amp; Zoth Studio tools." />
+  <link rel="canonical" href="https://zoth-egregore.netlify.app/" />
+
+  <!-- OpenGraph & Twitter Cards -->
+  <meta property="og:title" content="EGREGORE — 3,456 Co-Prime Minds · DeepSeek Flash × Nous Hermes · One Voice" />
+  <meta property="og:description" content="Experimental Beta deliberative AI model &amp; agent engine with Beta-posterior stopping, Design-Director + Formal-Logic Codex, and native ZothOS / Zoth Studio 77-tool orchestration." />
+  <meta property="og:url" content="https://zoth-egregore.netlify.app/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://zoth-egregore.netlify.app/og/egregore-og.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@1nc0gn30" />
+  <meta name="twitter:creator" content="@1nc0gn30" />
+  <meta name="twitter:title" content="EGREGORE — DeepSeek Flash × Nous Hermes Deliberative AI Engine" />
+  <meta name="twitter:description" content="One OpenAI-compatible face. 3,456 co-prime lenses. Adaptive incomplete-beta consensus + native ZothOS &amp; Zoth Studio 77-tool routing." />
+  <meta name="twitter:image" content="https://zoth-egregore.netlify.app/og/egregore-og.jpg" />
+
+  <!-- Typography: Syne + Space Grotesk + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Space+Grotesk:wght@400;500;600;700&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/styles.css" />
+
+  <!-- AEO & SEO Schema.org @graph -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "EGREGORE (zoth-egregore)",
+        "softwareVersion": "0.1.0-beta",
+        "url": "https://zoth-egregore.netlify.app/",
+        "downloadUrl": "https://github.com/1nc0gn30/zoth-egregore",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "ZothOS Linux, Linux, macOS",
+        "description": "Deliberative multi-mind AI model and OpenAI-compatible agent engine powered by DeepSeek Flash via Nous Hermes, 3,456 co-prime Pantheon lenses, Adaptive-Consistency Beta stopping, a distilled Design-Director and Formal-Logic Codex, and native 77-tool ZothOS / Zoth Studio orchestration.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "creator": {
+          "@type": "Organization",
+          "name": "1nc0gn30 • NullAI Platform",
+          "url": "https://nullai.tech",
+          "sameAs": [
+            "https://1nc0gn30.si",
+            "https://github.com/1nc0gn30",
+            "https://zothos.nullai.tech",
+            "https://zoth.nullai.tech"
+          ]
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How does EGREGORE turn DeepSeek Flash and Nous Hermes into one stronger model?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "EGREGORE exposes a single OpenAI-compatible endpoint (:8147/v1) that fans prompts across orthogonal co-prime Pantheon lenses (24 Archetypes x 18 Domains x 8 Stances = 3,456) using DeepSeek Flash (deepseek/deepseek-v4.1-flash) via Nous Hermes, injects a distilled Design-Director and Formal-Logic Codex, stops automatically via the regularized incomplete beta posterior 1 - I_0.5(V_1+1, V_2+1) >= 0.95, and collapses distinct cluster medoids through deepseek/deepseek-v4-pro."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why should I run EGREGORE on ZothOS or alongside Zoth Studio?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "While EGREGORE runs standalone anywhere with Python 3.10+, running it on ZothOS (zothos.nullai.tech) or with Zoth Studio installed (zoth.nullai.tech) unlocks automatic orchestration across 77 sovereign CLI/MCP developer tools and 23 local loopback daemons—including Neuro-Memory (:8094 Hebbian STDP recall), Adytum (:8135 DAG planner), WCAG Contrast Guard (:8150), HexStrike (:8138), and Zoth-Relay (:8765 Landlock sandboxing)."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is EGREGORE open-source and are benchmarks or HuggingFace weights available?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. EGREGORE is 100% open-source (MIT) at github.com/1nc0gn30/zoth-egregore with zero paywalls, supported only by optional community tips. Expanded adversarial test suites, public multi-benchmark evaluations, and HuggingFace Hub trace/adapter releases are currently in preparation and marked Coming Soon."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <!-- Sticky Top Navigation -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#" class="brand-group" aria-label="EGREGORE Home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" role="img" aria-label="Egregore Co-Prime Prism Icon">
+            <title>Egregore Co-Prime Prism</title>
+            <polygon points="12,2 21,7.5 21,16.5 12,22 3,16.5 3,7.5" stroke="currentColor" stroke-width="1.6" style="color:var(--accent)" />
+            <circle cx="12" cy="12" r="3.2" fill="currentColor" style="color:var(--gold)" />
+          </svg>
+        </span>
+        <span class="brand-title">EGREGORE</span>
+        <span class="beta-pill">Beta · v0.1.0</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary Navigation">
+        <a href="#workbench">Workbench</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#zoth-arsenal">Zoth Tools</a>
+        <a href="#zoth-ecosystem">ZothOS &amp; Studio</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="#quickstart">Quickstart</a>
+      </nav>
+
+      <div class="header-actions">
+        <button id="themeToggle" type="button" class="btn btn-secondary btn-icon" aria-label="Toggle Light or Dark Theme">LIGHT</button>
+        <a href="https://github.com/1nc0gn30/zoth-egregore" target="_blank" rel="noopener noreferrer" class="btn btn-primary">GitHub ↗</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <p class="eyebrow">DeepSeek Flash × Nous Hermes · Deliberative Model</p>
+          <h1 class="hero-title">
+            One Model Face.<br />
+            <span class="accent-word">3,456 Co-Prime Minds.</span><br />
+            One Lucid Answer.
+          </h1>
+          <p class="hero-lead">
+            <strong>EGREGORE</strong> (<code>zoth-egregore</code>) turns ultra-fast <strong>DeepSeek Flash</strong> scouts routed through <strong>Nous Hermes Agent</strong> into a single OpenAI-compatible intelligence—armed with a distilled <strong>Design-Director &amp; Formal-Logic Codex</strong>, exact Beta-posterior consensus stopping, and native access to the <strong>77-tool ZothOS &amp; Zoth Studio Arsenal</strong>.
+          </p>
+
+          <div class="hero-badges">
+            <span class="spec-chip"><strong>Scout:</strong> deepseek/deepseek-v4.1-flash</span>
+            <span class="spec-chip"><strong>Collapse:</strong> deepseek/deepseek-v4-pro</span>
+            <span class="spec-chip"><strong>Pantheon:</strong> 24×18×8 = 3,456</span>
+            <span class="spec-chip"><strong>Deps:</strong> Python 3.10+ Stdlib</span>
+          </div>
+
+          <div class="hero-cta-row">
+            <a href="#workbench" class="btn btn-primary">Open Deliberation Workbench</a>
+            <a href="#zoth-ecosystem" class="btn btn-gold">Unlock Full Power on ZothOS</a>
+            <a href="#how-it-works" class="btn btn-secondary">Read the Math</a>
+          </div>
+
+          <div class="install-bar">
+            <code>git clone https://github.com/1nc0gn30/zoth-egregore &amp;&amp; cd zoth-egregore &amp;&amp; pip install -e .</code>
+            <button type="button" class="btn btn-secondary btn-icon" data-copy="git clone https://github.com/1nc0gn30/zoth-egregore && cd zoth-egregore && pip install -e .">Copy</button>
+          </div>
+        </div>
+
+        <!-- 60fps Co-Prime Pantheon Lattice -->
+        <aside class="lattice-card" aria-label="Live 3,456-Lens Co-Prime Pantheon Lattice">
+          <div class="lattice-top">
+            <span><span class="status-dot"></span>CO-PRIME PANTHEON LATTICE · :8147/v1</span>
+            <span>gcd(stride, 3456) = 1</span>
+          </div>
+          <div class="lattice-canvas-wrap">
+            <canvas id="latticeCanvas" aria-label="Animated visualization of 3,456 co-prime Pantheon scout lenses refracting into a single Beta-posterior synthesis core"></canvas>
+          </div>
+          <div class="lattice-telemetry">
+            <div class="tele-cell">
+              <div class="tele-k">Pantheon Space</div>
+              <div class="tele-v">3,456</div>
+            </div>
+            <div class="tele-cell">
+              <div class="tele-k">Co-Prime Stride</div>
+              <div class="tele-v" id="teleStride">s=109</div>
+            </div>
+            <div class="tele-cell">
+              <div class="tele-k">Wave Depth</div>
+              <div class="tele-v" id="teleMinds">8 -&gt; 1000</div>
+            </div>
+            <div class="tele-cell">
+              <div class="tele-k">Beta Posterior</div>
+              <div class="tele-v" id="teleConf">P=0.9961</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Section 1: Interactive Deliberation, Codex & Zoth Tool Workbench -->
+    <section id="workbench" class="section">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Interactive Workbench</p>
+          <h2 class="section-title">Inspect Co-Prime Lens Expansion, Codex Injection &amp; Zoth Tool Routing</h2>
+          <p class="section-desc">
+            Type any architectural, design, or security prompt below. The workbench computes the exact SHA-256 co-prime stride across all 3,456 Pantheon lenses, injects matching Design-Director + Formal-Logic canons, routes to in-house Zoth tools, and supports live execution via local ZothOS (<code>127.0.0.1:8147</code>) or BYOK Nous/DeepSeek API keys.
+          </p>
+        </div>
+
+        <div class="workbench-shell">
+          <div class="preset-row" role="group" aria-label="Deliberation Prompt Presets">
+            <button type="button" class="preset-btn active" data-preset="consensus">Distributed Fan-Out &amp; Backpressure</button>
+            <button type="button" class="preset-btn" data-preset="design">UI/UX APCA Contrast &amp; 8pt Grid</button>
+            <button type="button" class="preset-btn" data-preset="security">Zero-Egress Loopback &amp; JWT Audit</button>
+            <button type="button" class="preset-btn" data-preset="motion">60fps Aperture Motion Spec</button>
+          </div>
+
+          <label for="wbPrompt" class="field-label">Prompt Dispatched to Egregore</label>
+          <textarea id="wbPrompt" class="wb-textarea" aria-label="Deliberation prompt"></textarea>
+
+          <div class="wb-action-bar">
+            <div class="wb-action-left">
+              <select id="wbMode" class="wb-select" aria-label="Model deliberation depth" style="width:auto;min-width:250px">
+                <option value="auto" selected>model="zoth-egregore" (adaptive Beta stop)</option>
+                <option value="probe">model="zoth-egregore:probe" (8-mind seed wave)</option>
+                <option value="50">model="zoth-egregore:50" (50 co-prime minds)</option>
+                <option value="256">model="zoth-egregore:256" (256 co-prime minds)</option>
+                <option value="1000">model="zoth-egregore:1000" (1,000-mind congress)</option>
+              </select>
+              <button id="runDelibBtn" type="button" class="btn btn-primary">Convene Pantheon</button>
+            </div>
+            <button id="toggleWireBtn" type="button" class="btn btn-secondary" aria-expanded="false" aria-controls="wireDrawer">
+              Connect ZothOS :8147 or BYOK Key
+            </button>
+          </div>
+
+          <!-- Optional Live Wire Configuration Drawer -->
+          <div id="wireDrawer" class="wire-drawer" hidden>
+            <div style="font-size:13.5px;color:var(--muted)">
+              <strong>Zero-Server Privacy:</strong> Keys stay strictly in this browser tab's memory and are never logged or persisted. On <strong>ZothOS</strong>, simply run <code>zoth-egregore serve</code> and leave the endpoint at <code>http://127.0.0.1:8147</code>.
+            </div>
+            <div class="wire-grid">
+              <div>
+                <label class="field-label" for="wireEndpoint">Daemon or OpenAI Base URL</label>
+                <input id="wireEndpoint" class="wb-input" type="url" placeholder="http://127.0.0.1:8147 or https://inference-api.nousresearch.com/v1" />
+              </div>
+              <div>
+                <label class="field-label" for="wireApiKey">Nous Portal / DeepSeek / OpenRouter Key</label>
+                <input id="wireApiKey" class="wb-input" type="password" autocomplete="off" placeholder="sk-... (optional for live browser BYOK)" />
+              </div>
+              <div>
+                <label class="field-label" for="wireModel">Scout Backbone Model</label>
+                <input id="wireModel" class="wb-input" type="text" value="deepseek/deepseek-v4.1-flash" />
+              </div>
+            </div>
+          </div>
+
+          <div class="wb-panes">
+            <div class="wb-pane">
+              <div class="pane-title">
+                <span>SHA-256 Co-Prime Lens Wave</span>
+                <span id="strideBadge" style="color:var(--muted);font-weight:400">gcd(stride,3456)=1</span>
+              </div>
+              <div id="lensStream" class="lens-stream"></div>
+            </div>
+
+            <div class="wb-pane">
+              <div class="pane-title">
+                <span>Active Codex &amp; Matched Zoth Tools</span>
+                <span style="color:var(--accent)">egregore/codex.py + zoth_tools.py</span>
+              </div>
+              <div id="canonTags" class="canon-tags"></div>
+              <pre id="canonSummary" style="margin:0;padding:10px;border-radius:6px;background:var(--code-bg);border:1px solid var(--border);font-size:11.5px;white-space:pre-wrap;color:var(--muted)"></pre>
+              <div id="toolMatchList" class="tool-match-list"></div>
+            </div>
+          </div>
+
+          <div id="synthOutput" class="synth-output" role="region" aria-live="polite" aria-label="Synthesized Egregore Output"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Precise Mathematical & Architectural Documentation -->
+    <section id="how-it-works" class="section">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Technical Specification</p>
+          <h2 class="section-title">How EGREGORE Works Under the Hood</h2>
+          <p class="section-desc">
+            Every design choice in <code>zoth-egregore</code> solves a concrete failure mode of naive multi-agent swarms: duplicate perspectives, runaway token bills on easy prompts, HTTP 429 retry storms, and shallow generic reasoning.
+          </p>
+        </div>
+
+        <div class="arch-grid">
+          <article class="arch-card">
+            <div class="arch-step">01 · Backbone &amp; Model Face</div>
+            <h3>DeepSeek Flash × Nous Hermes Self-MoA</h3>
+            <p>
+              EGREGORE binds an OpenAI-compatible HTTP server on <code>127.0.0.1:8147/v1</code> and reads your existing Nous Hermes profile (<code>~/.hermes/auth.json</code>), <code>NOUS_API_KEY</code>, or <code>DEEPSEEK_API_KEY</code>. High-speed <code>deepseek/deepseek-v4.1-flash</code> scouts explore orthogonal hypotheses in parallel while <code>deepseek/deepseek-v4-pro</code> collapses the surviving cluster medoids into one clean answer.
+            </p>
+            <div class="formula-box">model="zoth-egregore" | ":probe" | ":50" | ":256" | ":1000"</div>
+          </article>
+
+          <article class="arch-card">
+            <div class="arch-step">02 · Cognitive Diversity</div>
+            <h3>3,456 Co-Prime Pantheon Lenses</h3>
+            <p>
+              Prompting the same model 100 times with the same system prompt samples the same mode 100 times. EGREGORE crosses <strong>24 Archetypes × 18 Domains × 8 Stances = 3,456</strong> lenses. Because <code>3456 = 2^7 · 3^3</code>, hashing the prompt with SHA-256 to pick <code>stride</code> coprime to 2 and 3 guarantees every mind up to 3,456 is mathematically unique.
+            </p>
+            <div class="formula-box">lens(k) = (start + k · stride) mod 3456,  gcd(stride, 3456) = 1</div>
+          </article>
+
+          <article class="arch-card">
+            <div class="arch-step">03 · Adaptive Stopping &amp; Free-MAD</div>
+            <h3>Zero-Call Beta-Posterior Consensus</h3>
+            <p>
+              No extra LLM judge calls are ever made to score waves. Answers are grouped by normalized unigram+bigram Jaccard similarity (<code>&ge; 0.55</code>). After Wave 1 (8 minds), Lentz continued-fraction evaluation of the incomplete beta posterior halts immediately if the leader is safe—cutting sample spend up to <strong>7.9×</strong> on clear tasks while escalating geometrically (<code>×3.0</code>) on hard ones. If synthesis fails, the lead cluster's medoid is returned.
+            </p>
+            <div class="formula-box">P(p₁ &gt; p₂ | V₁, V₂) = 1 − I₀.₅(V₁ + 1, V₂ + 1) &ge; 0.95</div>
+          </article>
+
+          <article class="arch-card">
+            <div class="arch-step">04 · Senior Judgment &amp; Wire Safety</div>
+            <h3>Design+Logic Codex &amp; Header-Driven Governor</h3>
+            <p>
+              <code>egregore/codex.py</code> injects formal deductive invariants (necessary vs sufficient conditions, boundary proofs, counterexample search) plus 8pt/APCA Design-Director and 60fps Motion Choreography canons. Underneath, <code>AdaptiveRateLimiter</code> enforces <code>400 RPM / 4M TPM</code> from live <code>x-ratelimit-remaining-*</code> headers alongside single-flight coalescing and SQLite WAL caching.
+            </p>
+            <div class="formula-box">BudgetGuard(day_cap, req_cap) + SingleFlight(SHA256_digest)</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Native In-House Zoth Arsenal -->
+    <section id="zoth-arsenal" class="section">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">In-House Tool Augmentation</p>
+          <h2 class="section-title">Wired Directly Into the Zoth Sovereign Arsenal</h2>
+          <p class="section-desc">
+            Unlike isolated chat wrappers, <code>egregore/zoth_tools.py</code> inspects your environment for Zoth CLI binaries and live loopback daemons—arming deliberations with concrete memory recall, security auditing, contrast verification, and DAG planning tools.
+          </p>
+        </div>
+
+        <div class="filter-bar" role="group" aria-label="Filter Zoth Tools by Category">
+          <button type="button" class="preset-btn active" data-cat="All">All Core Bindings (12)</button>
+          <button type="button" class="preset-btn" data-cat="Swarm & Core">Swarm &amp; Core</button>
+          <button type="button" class="preset-btn" data-cat="Design & UI">Design &amp; UI</button>
+          <button type="button" class="preset-btn" data-cat="Security & Recon">Security &amp; Recon</button>
+          <button type="button" class="preset-btn" data-cat="Memory & Knowledge">Memory &amp; AEO</button>
+        </div>
+
+        <div id="arsenalGrid" class="arsenal-grid"></div>
+      </div>
+    </section>
+
+    <!-- Section 4: Pitch — Why Run Egregore on ZothOS or Zoth Studio -->
+    <section id="zoth-ecosystem" class="section">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Execution Environments</p>
+          <h2 class="section-title">Built to Shine on ZothOS &amp; Zoth Studio</h2>
+          <p class="section-desc">
+            You can `pip install` EGREGORE anywhere in ten seconds—but pairing it with <strong>Zoth Studio</strong> or booting <strong>ZothOS</strong> turns a deliberative text model into a full local-first engineering organism.
+          </p>
+        </div>
+
+        <div class="tier-grid">
+          <article class="tier-card">
+            <div>
+              <div class="tier-badge">Tier 01 · Portable Python</div>
+              <h3>Standalone Proxy</h3>
+              <p style="color:var(--muted);font-size:14.5px;margin:8px 0 0">
+                Drop-in OpenAI server on any Linux or macOS laptop with zero pip runtime bloat.
+              </p>
+              <ul class="tier-list">
+                <li>OpenAI-compatible <code>:8147/v1</code> endpoint</li>
+                <li>3,456 co-prime DeepSeek Flash × Hermes minds</li>
+                <li>Adaptive Beta-posterior consensus stopping</li>
+                <li>Built-in Design-Director &amp; Formal-Logic Codex</li>
+                <li>Single-flight + SQLite WAL response cache</li>
+              </ul>
+            </div>
+            <a href="https://github.com/1nc0gn30/zoth-egregore" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Clone on GitHub ↗</a>
+          </article>
+
+          <article class="tier-card">
+            <div>
+              <div class="tier-badge">Tier 02 · Workstation Suite</div>
+              <h3>With Zoth Studio Installed</h3>
+              <p style="color:var(--muted);font-size:14.5px;margin:8px 0 0">
+                Pair EGREGORE with the 77-tool visual workstation suite and 21-Pane Swarm Multiplexer.
+              </p>
+              <ul class="tier-list">
+                <li>Everything in Standalone Proxy</li>
+                <li>77 browser &amp; CLI developer workstations</li>
+                <li>Live WCAG/APCA, CWV Speed &amp; AEO Graph engines</li>
+                <li>21-Agent PTY Swarm Multiplexer visual cockpit</li>
+                <li>Direct MCP &amp; local tool routing via <code>zoth-egregore tools</code></li>
+              </ul>
+            </div>
+            <a href="https://zoth.nullai.tech" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Explore Zoth Studio ↗</a>
+          </article>
+
+          <article class="tier-card featured">
+            <div>
+              <div class="tier-badge">Tier 03 · Recommended Sovereign Host</div>
+              <h3>Native on ZothOS v3.4</h3>
+              <p style="color:var(--muted);font-size:14.5px;margin:8px 0 0">
+                The complete bare-metal or Live-RAM operating system engineered around Hermes, DeepSeek Flash, and EGREGORE.
+              </p>
+              <ul class="tier-list">
+                <li>23 pre-wired loopback daemons ready on boot</li>
+                <li><strong>Neuro-Memory (:8094)</strong> sub-ms Hebbian STDP recall</li>
+                <li><strong>Adytum (:8135)</strong> deterministic DAG task planner</li>
+                <li><strong>Zoth-Relay (:8765)</strong> kernel Landlock tool sandboxing</li>
+                <li>RAM-only <code>zoth-vault</code> keys + lightweight <a href="https://zothos-lite.nullai.tech" style="color:var(--accent);text-decoration:underline">ZothOS-Lite</a> edition</li>
+              </ul>
+            </div>
+            <a href="https://zothos.nullai.tech" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Get ZothOS v3.4 ↗</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Validation, Benchmarks & HuggingFace Roadmap (Explicit Coming Soon) -->
+    <section id="roadmap" class="section">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Experimental Beta Transparency</p>
+          <h2 class="section-title">Tests, Benchmarks &amp; HuggingFace Release Roadmap</h2>
+          <p class="section-desc">
+            We ship real working architecture first and publish numbers only when reproducible harnesses and raw transcripts are ready to inspect. Current status for <code>v0.1.0-beta</code>:
+          </p>
+        </div>
+
+        <div class="roadmap-grid">
+          <article class="roadmap-card">
+            <span class="soon-pill">Tests Coming Soon</span>
+            <h3>Expanded Adversarial Test Suite</h3>
+            <p style="color:var(--muted);font-size:14.5px;margin:10px 0 0">
+              <strong>Tests coming soon.</strong> While 61 deterministic unit assertions already gate the co-prime lattice, Beta-posterior math, budget guard, and single-flight cache in CI today, our full live-wire adversarial, red-team, and multi-turn stress test suite is actively being finalized.
+            </p>
+          </article>
+
+          <article class="roadmap-card">
+            <span class="soon-pill">Benchmarks Coming Soon</span>
+            <h3>Reproducible Multi-Domain Benchmarks</h3>
+            <p style="color:var(--muted);font-size:14.5px;margin:10px 0 0">
+              <strong>Benchmarks coming soon.</strong> Head-to-head evaluations comparing single-pass DeepSeek Flash against <code>zoth-egregore</code> (adaptive) and <code>zoth-egregore:256</code> across GPQA-Diamond, LiveCodeBench, SWE-bench Verified, and blind UI/Design rubrics—complete with USD cost curves—are in progress.
+            </p>
+          </article>
+
+          <article class="roadmap-card">
+            <span class="soon-pill">HuggingFace Coming Soon</span>
+            <h3>HuggingFace Weights &amp; Trace Datasets</h3>
+            <p style="color:var(--muted);font-size:14.5px;margin:10px 0 0">
+              <strong>HuggingFace coming soon.</strong> Open deliberation consensus traces, Design-Director + Formal-Logic preference pairs, and fine-tuned DeepSeek Flash / Hermes adapters will be published openly on HuggingFace Hub.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: Quickstart & FAQ -->
+    <section id="quickstart" class="section" style="border-bottom:0">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Drop-In Integration</p>
+          <h2 class="section-title">Wire Into Hermes, Python, or Any OpenAI Client</h2>
+          <p class="section-desc">
+            Zero SDK lock-in. Point any tool that speaks <code>POST /v1/chat/completions</code> at port <code>8147</code>.
+          </p>
+        </div>
+
+        <div class="code-panel" style="margin-bottom:56px">
+          <div class="code-tabs" role="tablist" aria-label="Integration Code Examples">
+            <button type="button" class="code-tab active" data-code-tab="hermes">Nous Hermes Agent</button>
+            <button type="button" class="code-tab" data-code-tab="python">Python OpenAI SDK</button>
+            <button type="button" class="code-tab" data-code-tab="cli">ZothOS CLI</button>
+            <button type="button" class="code-tab" data-code-tab="curl">cURL</button>
+          </div>
+          <pre id="quickstartCode" class="code-block"></pre>
+        </div>
+
+        <div class="section-head">
+          <p class="eyebrow">FAQ</p>
+          <h2 class="section-title">Frequently Asked Questions</h2>
+        </div>
+
+        <div class="faq-list">
+          <details class="faq-item" open>
+            <summary>Does EGREGORE burn 1,000 API calls on simple questions?</summary>
+            <p>
+              No. Adaptive mode starts with a single 8-mind seed wave (<code>deepseek/deepseek-v4.1-flash</code>) and computes exact Beta-posterior consensus <code>1 - I_0.5(V_1+1, V_2+1)</code> locally with zero judge calls. When the 8 minds agree, EGREGORE stops immediately at 8 scout calls + 1 synthesis call. Only genuine disagreement earns larger waves.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>How does EGREGORE authenticate with DeepSeek Flash and Nous Hermes?</summary>
+            <p>
+              On machines with Nous Hermes Agent installed, EGREGORE automatically discovers your Nous Portal credentials in <code>~/.hermes/auth.json</code>. You can also set <code>NOUS_API_KEY</code>, <code>DEEPSEEK_API_KEY</code>, or <code>OPENROUTER_API_KEY</code> via environment variables without changing code.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>What happens if I use EGREGORE without ZothOS or Zoth Studio installed?</summary>
+            <p>
+              The core deliberation engine, 3,456 co-prime Pantheon lenses, Adaptive-Consistency stopping, and Design+Logic Codex work 100% standalone on Python 3.10+. Installing Zoth Studio or running on ZothOS upgrades <code>egregore/zoth_tools.py</code> from specification hints to live local CLI &amp; loopback daemon orchestration across 77 tools.
+            </p>
+          </details>
+        </div>
+
+        <!-- Voluntary Open-Source Support Bar (Zero Paywalls) -->
+        <div class="support-bar">
+          <div>
+            <strong style="display:block;font-size:15px">100% Open-Source &amp; Unlocked (MIT)</strong>
+            <span style="font-size:13.5px;color:var(--muted)">No paywalls, no gated modes, no telemetry tracking. Support independent sovereign AI R&amp;D if EGREGORE sharpens your stack.</span>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+            <a href="https://buy.stripe.com/3cIfZg27PdKo2D64Ocfw40X" target="_blank" rel="noopener noreferrer" class="btn btn-gold">☕ Buy Us a Coffee</a>
+            <span class="sol-box">SOL: GG2eQbVh8ut1BK6j1A2tz7pSySdLpD38BgyEhGcxdXoK</span>
+            <button type="button" class="btn btn-secondary btn-icon" data-copy="GG2eQbVh8ut1BK6j1A2tz7pSySdLpD38BgyEhGcxdXoK">Copy SOL</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        Engineered by <a href="https://1nc0gn30.si" target="_blank" rel="noopener noreferrer" style="color:var(--ink);font-weight:600">1nc0gn30</a> &bull;
+        <a href="https://nullai.tech" target="_blank" rel="noopener noreferrer" style="color:var(--ink);font-weight:600">NullAI Platform</a>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/1nc0gn30/zoth-egregore" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://zothos.nullai.tech" target="_blank" rel="noopener noreferrer">ZothOS</a>
+        <a href="https://zothos-lite.nullai.tech" target="_blank" rel="noopener noreferrer">ZothOS-Lite</a>
+        <a href="https://zoth.nullai.tech" target="_blank" rel="noopener noreferrer">Zoth Studio</a>
+        <a href="https://zoth.nullai.tech/tools/zoth-swarm-multiplexer" target="_blank" rel="noopener noreferrer">Swarm Multiplexer</a>
+        <a href="/llms.txt">llms.txt</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>

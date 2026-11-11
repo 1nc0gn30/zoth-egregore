@@ -162,6 +162,25 @@ def cmd_stats(args) -> int:
     return 0
 
 
+def cmd_tools(args) -> int:
+    from .codex import codex_for_prompt
+    from .zoth_tools import detect_zoth_environment, match_tools_for_prompt
+
+    env = detect_zoth_environment(probe_daemons=args.probe)
+    matched = match_tools_for_prompt(args.prompt or "", limit=args.limit, probe_local=args.probe)
+    _codex, domains = codex_for_prompt(args.prompt or "")
+    if args.json:
+        print(json.dumps({"environment": env, "codex_domains": domains, "matched_tools": matched}, indent=2))
+        return 0
+    print(f"Zoth environment : {env['tier']}  (catalog={env['catalog_tools_total']} tools, "
+          f"core_clis={env['core_clis_installed']}/{env['core_clis_checked']})")
+    print(f"Active canons    : {', '.join(domains)}")
+    for t in matched:
+        status = "LIVE" if t["daemon_online"] else ("CLI" if t["installed_locally"] else "SPEC")
+        print(f"  [{status:4s}] {t['id']:24s} ({t['invoke_hint']})")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="egregore", description="EGREGORE — one model, many minds")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -201,6 +220,13 @@ def main(argv: list[str] | None = None) -> int:
     sx = sub.add_parser("stats", help="limiter, budget, cache")
     sx.add_argument("--state-dir", default=None)
     sx.set_defaults(fn=cmd_stats)
+
+    tl = sub.add_parser("tools", help="inspect ZothOS/Studio arsenal & codex routing")
+    tl.add_argument("prompt", nargs="?", default="")
+    tl.add_argument("--limit", type=int, default=6)
+    tl.add_argument("--probe", action="store_true", help="probe loopback daemons")
+    tl.add_argument("--json", action="store_true")
+    tl.set_defaults(fn=cmd_tools)
 
     args = p.parse_args(argv)
     return args.fn(args)

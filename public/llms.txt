@@ -1,0 +1,16 @@
+# EGREGORE (zoth-egregore · v0.1.0-beta)
+
+> Deliberative Multi-Mind AI Model & Agent Engine powered by DeepSeek Flash (`deepseek/deepseek-v4.1-flash`) × Nous Hermes, armed with a distilled Design-Director & Formal-Logic Codex and native orchestration across the 77-tool ZothOS & Zoth Studio Arsenal.
+
+- Website: https://zoth-egregore.netlify.app
+- GitHub Repository: https://github.com/1nc0gn30/zoth-egregore
+- Ecosystem: https://zothos.nullai.tech | https://zoth.nullai.tech | https://zothos-lite.nullai.tech | https://nullai.tech | https://1nc0gn30.si
+- Status: Experimental Beta (`v0.1.0-beta`). Expanded Evaluation Tests Coming Soon · Public Benchmarks Coming Soon · HuggingFace Release Coming Soon.
+
+## Core Architecture
+- **Single OpenAI-Compatible Face (`:8147/v1`)**: Callers request `model="zoth-egregore"`, `zoth-egregore:probe`, `zoth-egregore:50`, `zoth-egregore:256`, or `zoth-egregore:1000`.
+- **Backbone**: `deepseek/deepseek-v4.1-flash` scout fan-out via Nous Hermes (`~/.hermes/auth.json` / `NOUS_API_KEY`) + `deepseek/deepseek-v4-pro` synthesis collapse.
+- **3,456 Co-Prime Pantheon Lenses**: `24 Archetypes × 18 Domains × 8 Stances = 3,456` orthogonal cognitive perspectives traversed via deterministic SHA-256 co-prime stride `gcd(stride, 3456) = 1`.
+- **Zero-Call Beta-Posterior Stopping**: Adaptive-Consistency (`arXiv:2305.11860`) evaluates `1 - I_0.5(V_1 + 1, V_2 + 1) >= 0.95` via Lentz's continued fraction, stopping in 8 minds on clear consensus and escalating geometrically up to 1,000 minds only on measured disagreement, with Free-MAD medoid fallback.
+- **Design-Director & Formal-Logic Codex (`egregore/codex.py`)**: Injects formal deductive invariants, 8pt/APCA UI design canons, GPU motion choreography tokens, and systems/security rigor into scout and synthesis passes.
+- **In-House Zoth Arsenal Integration (`egregore/zoth_tools.py`)**: Automatically discovers and routes across ZothOS & Zoth Studio tools (`Neuro-Memory :8094`, `Adytum :8135`, `Swarm Multiplexer :8141`, `WCAG Contrast Guard :8150`, `Reality Shader Forge :8118`, `HexStrike :8138`, `Zoth-Relay :8765`).
