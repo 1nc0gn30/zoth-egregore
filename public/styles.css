@@ -18,9 +18,9 @@
   --amber: #f5a623;
   --amber-soft: rgba(245, 166, 35, 0.13);
   --code-bg: #05070a;
-  --shadow: 0 20px 56px rgba(0, 0, 0, 0.48);
   --canvas-bg: #05080c;
   --canvas-ring: rgba(148, 179, 202, 0.13);
+  --grid-line: rgba(148, 179, 202, 0.055);
 }
 
 [data-theme="light"] {
@@ -42,9 +42,9 @@
   --amber: #9e5a08;
   --amber-soft: rgba(158, 90, 8, 0.11);
   --code-bg: #f0ede4;
-  --shadow: 0 18px 44px rgba(15, 22, 30, 0.08);
   --canvas-bg: #f1eee5;
   --canvas-ring: rgba(15, 22, 30, 0.12);
+  --grid-line: rgba(16, 24, 34, 0.06);
 }
 
 *,
@@ -61,9 +61,13 @@ html {
 body {
   margin: 0;
   background-color: var(--bg);
+  /* Flat field, one hairline instrument grid. The old two-blob radial wash was pure
+     decoration; the only colour on this page now comes from the lattice and telemetry. */
   background-image:
-    radial-gradient(900px 460px at 16% -6%, var(--accent-soft), transparent 65%),
-    radial-gradient(760px 400px at 88% 4%, var(--gold-soft), transparent 65%);
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 72px 72px;
+  background-position: center top;
   color: var(--ink);
   font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 16px;
@@ -120,7 +124,7 @@ pre,
 .brand-mark {
   width: 34px;
   height: 34px;
-  border-radius: 8px;
+  border-radius: 0;
   border: 1px solid var(--border-strong);
   background: var(--accent-soft);
   display: inline-flex;
@@ -184,7 +188,7 @@ pre,
   gap: 8px;
   min-height: 44px;
   padding: 10px 18px;
-  border-radius: 8px;
+  border-radius: 0;
   font-family: 'Space Grotesk', sans-serif;
   font-size: 14px;
   font-weight: 600;
@@ -269,23 +273,29 @@ h1, h2, h3 {
 
 /* Hero */
 .hero {
-  padding-block: 64px 56px;
+  padding-block: 72px 0;
   border-bottom: 1px solid var(--border);
 }
 
 .hero-grid {
   display: grid;
-  grid-template-columns: 1.12fr 0.88fr;
-  gap: 40px;
-  align-items: center;
+  grid-template-columns: minmax(0, 1.32fr) minmax(0, 0.68fr);
+  gap: 56px;
+  align-items: start;
+  padding-bottom: 56px;
+}
+
+.hero-copy {
+  min-width: 0;
 }
 
 .hero-title {
-  font-size: clamp(2.15rem, 4.3vw, 3.65rem);
-  line-height: 1.06;
-  letter-spacing: -0.03em;
+  font-size: clamp(2.35rem, 4.8vw, 4rem);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
   font-weight: 800;
-  margin-bottom: 20px;
+  margin: 14px 0 22px;
+  text-wrap: balance;
 }
 
 .hero-title .accent-word {
@@ -295,30 +305,46 @@ h1, h2, h3 {
 .hero-lead {
   font-size: 1.06rem;
   color: var(--muted);
-  max-width: 62ch;
-  margin: 0 0 24px;
+  max-width: 66ch;
+  margin: 0 0 30px;
 }
 
-.hero-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 24px;
-}
-
-.spec-chip {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11.5px;
-  padding: 5px 10px;
-  border-radius: 6px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--muted);
-}
-
-.spec-chip strong {
+.hero-lead strong {
   color: var(--ink);
   font-weight: 600;
+}
+
+/* Ruled inset spec rows — replaces the pill-chip row. */
+.hero-spec {
+  margin: 0 0 30px;
+  border-top: 1px solid var(--border);
+}
+
+.spec-row {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr);
+  gap: 16px;
+  align-items: baseline;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.spec-row dt {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.spec-row dd {
+  margin: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  overflow-wrap: anywhere;
 }
 
 .hero-cta-row {
@@ -335,8 +361,9 @@ h1, h2, h3 {
   gap: 12px;
   background: var(--code-bg);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 8px 12px 8px 16px;
+  border-left: 2px solid var(--border-strong);
+  border-radius: 0;
+  padding: 10px 12px 10px 16px;
   max-width: 100%;
 }
 
@@ -347,14 +374,11 @@ h1, h2, h3 {
   min-width: 0;
 }
 
-/* Hero Lattice Card */
-.lattice-card {
-  background: var(--surface);
-  border: 1px solid var(--border-strong);
-  border-radius: 14px;
-  padding: 16px;
-  box-shadow: var(--shadow);
+/* Hero readout rail — an instrument panel, not a card. */
+.hero-readout {
   min-width: 0;
+  border-top: 1px solid var(--border-strong);
+  padding-top: 16px;
 }
 
 .lattice-top {
@@ -362,29 +386,55 @@ h1, h2, h3 {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 10.5px;
+  letter-spacing: 0.09em;
   color: var(--muted);
 }
 
 .status-dot {
   display: inline-block;
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: var(--accent);
-  margin-right: 6px;
+  margin-right: 7px;
   box-shadow: 0 0 10px var(--accent);
+}
+
+.readout-note {
+  margin: 16px 0 0;
+  font-size: 12.5px;
+  line-height: 1.62;
+  color: var(--dim);
+}
+
+.readout-note code {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+/* Full-bleed lattice band — the hero's centrepiece. The disc is sized by
+   min(w, h) in app.js, so the wrap stays near-square and centred inside a
+   wider field, with the HUD annotations parked in the outer gutters. */
+.lattice-band {
+  position: relative;
+  width: 100%;
+  border-top: 1px solid var(--border);
+  background:
+    linear-gradient(to bottom, var(--accent-soft), transparent 70%),
+    var(--canvas-bg);
+  padding-block: 28px;
 }
 
 .lattice-canvas-wrap {
   width: 100%;
-  aspect-ratio: 16 / 11;
-  border-radius: 10px;
+  max-width: min(100%, 820px);
+  margin-inline: auto;
+  height: clamp(320px, 44vh, 470px);
   overflow: hidden;
-  border: 1px solid var(--border);
-  background: var(--canvas-bg);
 }
 
 #latticeCanvas {
@@ -393,35 +443,67 @@ h1, h2, h3 {
   height: 100%;
 }
 
+.lattice-hud {
+  position: absolute;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--dim);
+  pointer-events: none;
+  max-width: 40%;
+}
+
+.lattice-hud-tl {
+  top: 40px;
+  left: max(16px, calc(50% - 560px));
+}
+
+.lattice-hud-br {
+  bottom: 40px;
+  right: max(16px, calc(50% - 560px));
+  text-align: right;
+}
+
 .lattice-telemetry {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
-  margin-top: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  margin-top: 14px;
+  border-top: 1px solid var(--border);
 }
 
 .tele-cell {
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 8px 10px;
+  padding: 12px 0;
   min-width: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.tele-cell:nth-child(odd) {
+  padding-right: 14px;
+  border-right: 1px solid var(--border);
+}
+
+.tele-cell:nth-child(even) {
+  padding-left: 14px;
 }
 
 .tele-k {
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.11em;
   text-transform: uppercase;
   color: var(--dim);
 }
 
 .tele-v {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 13.5px;
+  font-size: 17px;
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
   color: var(--ink);
-  margin-top: 2px;
+  margin-top: 3px;
   overflow-wrap: anywhere;
 }
 
@@ -452,10 +534,9 @@ h1, h2, h3 {
 /* Workbench */
 .workbench-shell {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 0;
   padding: 24px;
-  box-shadow: var(--shadow);
 }
 
 .preset-row {
@@ -468,7 +549,7 @@ h1, h2, h3 {
 .preset-btn {
   min-height: 44px;
   padding: 8px 14px;
-  border-radius: 8px;
+  border-radius: 0;
   background: var(--surface-2);
   border: 1px solid var(--border);
   color: var(--muted);
@@ -498,7 +579,7 @@ h1, h2, h3 {
   width: 100%;
   background: var(--code-bg);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 0;
   color: var(--ink);
   font-family: 'Space Grotesk', sans-serif;
   font-size: 15px;
@@ -537,13 +618,26 @@ h1, h2, h3 {
 .wire-drawer {
   background: var(--surface-2);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-left: 2px solid var(--gold);
+  border-radius: 0;
   padding: 16px;
   margin-bottom: 20px;
 }
 
 .wire-drawer[hidden] {
   display: none;
+}
+
+.wire-note {
+  margin: 12px 0 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--dim);
+}
+
+.wire-note code {
+  font-size: 11.5px;
+  color: var(--muted);
 }
 
 .wire-grid {
@@ -566,15 +660,22 @@ h1, h2, h3 {
 .wb-panes {
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
-  gap: 20px;
+  gap: 0;
 }
 
 .wb-pane {
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 16px;
   min-width: 0;
+  border-top: 1px solid var(--border-strong);
+  padding: 18px 0 0;
+}
+
+.wb-pane:first-child {
+  padding-right: 22px;
+}
+
+.wb-pane + .wb-pane {
+  border-left: 1px solid var(--border);
+  padding-left: 22px;
 }
 
 .pane-title {
@@ -591,6 +692,22 @@ h1, h2, h3 {
   gap: 8px;
 }
 
+/* Sub-labels riding inside a .pane-title: reset the gold/uppercase treatment. */
+.pane-tag,
+.pane-note {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-transform: none;
+  color: var(--dim);
+  overflow-wrap: anywhere;
+}
+
+.pane-tag {
+  color: var(--muted);
+}
+
 .lens-stream {
   display: grid;
   gap: 8px;
@@ -601,7 +718,7 @@ h1, h2, h3 {
 .lens-row {
   background: var(--code-bg);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 0;
   padding: 8px 10px;
   display: flex;
   align-items: center;
@@ -633,10 +750,23 @@ h1, h2, h3 {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   padding: 3px 8px;
-  border-radius: 4px;
+  border-radius: 0;
   background: var(--accent-soft);
   color: var(--accent);
   border: 1px solid var(--border-strong);
+}
+
+.canon-summary {
+  margin: 0;
+  padding: 12px 0 0;
+  border-top: 1px solid var(--border);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 1.62;
+  font-variant-numeric: tabular-nums;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--muted);
 }
 
 .tool-match-list {
@@ -648,7 +778,7 @@ h1, h2, h3 {
 .tool-match-card {
   background: var(--code-bg);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 0;
   padding: 10px 12px;
 }
 
@@ -680,33 +810,122 @@ h1, h2, h3 {
   overflow-wrap: anywhere;
 }
 
-.synth-output {
+/* Deliberation console — the product surface, not a text blob.
+   Fixed columns, tabular numerals, one hairline frame. */
+.synth-console {
   margin-top: 16px;
+  border: 1px solid var(--border-strong);
   background: var(--code-bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 16px;
+}
+
+.console-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+.console-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--ink);
+}
+
+.console-title::before {
+  content: "> ";
+  color: var(--accent);
+}
+
+.console-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--dim);
+  overflow-wrap: anywhere;
+}
+
+.console-status[data-state='live'] {
+  color: var(--accent);
+}
+
+.console-status[data-state='preview'] {
+  color: var(--gold);
+}
+
+.trace-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(196px, 1fr));
+  gap: 0;
+  margin: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.trace-meta[hidden] {
+  display: none;
+}
+
+.trace-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2px;
+  padding: 8px 12px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  min-width: 0;
+}
+
+.trace-row dt {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.trace-row dd {
+  margin: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.synth-output {
+  margin: 0;
+  padding: 14px 12px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 13px;
-  line-height: 1.6;
+  line-height: 1.62;
+  font-variant-numeric: tabular-nums;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
   color: var(--ink);
-  max-height: 360px;
+  max-height: 380px;
   overflow-y: auto;
 }
 
-/* Architecture Cards */
+/* Architecture — ruled rows inside one frame, not floating cards. */
 .arch-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
+  gap: 0;
+  border-top: 1px solid var(--border-strong);
+  border-left: 1px solid var(--border);
 }
 
 .arch-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  background: transparent;
+  border: 0;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
   padding: 24px;
   min-width: 0;
 }
@@ -734,7 +953,7 @@ h1, h2, h3 {
 .formula-box {
   background: var(--code-bg);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 0;
   padding: 12px 14px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 12.5px;
@@ -753,14 +972,18 @@ h1, h2, h3 {
 .arsenal-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  gap: 0;
+  border-top: 1px solid var(--border-strong);
+  border-left: 1px solid var(--border);
 }
 
 .arsenal-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 18px;
+  background: transparent;
+  border: 0;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  padding: 18px 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -792,9 +1015,9 @@ h1, h2, h3 {
 
 .tier-card {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 28px 24px;
+  border: 1px solid var(--border-strong);
+  border-radius: 0;
+  padding: 26px 22px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -802,10 +1025,12 @@ h1, h2, h3 {
   min-width: 0;
 }
 
+/* The one section that keeps a real frame: it is the "which do I use"
+   comparison, so it is allowed to out-weigh the ruled tables above it. */
 .tier-card.featured {
   border-color: var(--border-strong);
-  box-shadow: var(--shadow);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--accent-soft) 55%, var(--surface)) 0%, var(--surface) 45%);
+  border-top: 2px solid var(--accent);
+  background: var(--surface);
 }
 
 .tier-badge {
@@ -845,14 +1070,18 @@ h1, h2, h3 {
 .roadmap-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
+  gap: 0;
+  border-top: 1px solid var(--border-strong);
+  border-left: 1px solid var(--border);
 }
 
 .roadmap-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
+  background: transparent;
+  border: 0;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  padding: 22px 24px;
   min-width: 0;
 }
 
@@ -864,7 +1093,7 @@ h1, h2, h3 {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   padding: 4px 10px;
-  border-radius: 999px;
+  border-radius: 0;
   background: var(--amber-soft);
   color: var(--amber);
   border: 1px solid color-mix(in srgb, var(--amber) 40%, transparent);
@@ -875,7 +1104,7 @@ h1, h2, h3 {
 .code-panel {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 0;
   overflow: hidden;
 }
 
@@ -915,18 +1144,20 @@ h1, h2, h3 {
   overflow-x: auto;
 }
 
-/* FAQ */
+/* FAQ — a ruled list with a real open/close affordance. */
 .faq-list {
   display: grid;
-  gap: 12px;
+  gap: 0;
   max-width: 860px;
+  border-bottom: 1px solid var(--border);
 }
 
 .faq-item {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 4px 18px;
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+  padding: 0 18px 0 0;
 }
 
 .faq-item summary {
@@ -934,11 +1165,24 @@ h1, h2, h3 {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
   cursor: pointer;
   font-weight: 600;
   font-size: 15.5px;
   list-style: none;
   padding-block: 10px;
+}
+
+.faq-item summary::after {
+  content: "+";
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: var(--accent);
+  flex: none;
+}
+
+.faq-item[open] summary::after {
+  content: "-";
 }
 
 .faq-item summary::-webkit-details-marker {
@@ -955,7 +1199,8 @@ h1, h2, h3 {
 .support-bar {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-left: 2px solid var(--accent);
+  border-radius: 0;
   padding: 20px 24px;
   display: flex;
   flex-wrap: wrap;
@@ -972,7 +1217,7 @@ h1, h2, h3 {
   background: var(--code-bg);
   border: 1px solid var(--border);
   padding: 8px 12px;
-  border-radius: 6px;
+  border-radius: 0;
   overflow-wrap: anywhere;
 }
 
@@ -1000,6 +1245,34 @@ h1, h2, h3 {
   color: var(--accent);
 }
 
+/* --- Utility classes that replace the former inline style= attributes ---
+   Inline presentation is what made the first pass read as generated: the same
+   four declarations copied onto six different paragraphs. Each of these has
+   exactly one consumer and lives next to the component it serves. */
+
+.mark-hex { color: var(--accent); }
+.mark-core { color: var(--gold); }
+
+.wb-select-wide { width: auto; min-width: 250px; }
+
+.item-lede {
+  margin: 8px 0 0;
+  font-size: 14.5px;
+  color: var(--muted);
+}
+
+.link-accent { color: var(--accent); text-decoration: underline; }
+
+.section-last { border-bottom: 0; }
+
+.code-panel-spaced { margin-bottom: 56px; }
+
+.support-title { display: block; font-size: 15px; }
+.support-note { font-size: 13.5px; color: var(--muted); }
+.support-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+.footer-link { color: var(--ink); font-weight: 600; }
+
 /* Responsive Breakpoints */
 @media (max-width: 1024px) {
   .hero-grid,
@@ -1007,6 +1280,23 @@ h1, h2, h3 {
   .tier-grid,
   .roadmap-grid {
     grid-template-columns: 1fr;
+  }
+  /* Single-column workbench: the vertical rule between panes becomes a
+     horizontal one, so the pane gutters have to move with it. */
+  .wb-pane:first-child,
+  .wb-pane + .wb-pane {
+    padding-left: 0;
+    padding-right: 0;
+    border-left: 0;
+  }
+  .wb-pane + .wb-pane {
+    border-top: 1px solid var(--border);
+    margin-top: 18px;
+  }
+  /* The gutter HUDs have nowhere to sit once the band is full-width; they
+     only restate .readout-note, so they go rather than overlap the disc. */
+  .lattice-hud {
+    display: none;
   }
   .arsenal-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));

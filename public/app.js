@@ -591,6 +591,25 @@
     return { start, stride, lenses, domains, tools, conf, presetKey: activePresetKey };
   }
 
+  // --- Deliberation Trace Presentation ---
+  // The console is the product: real numbers the engine already computed, rendered as
+  // ruled rows instead of a text blob nobody reads.
+  function setConsoleStatus(state, text) {
+    const el = document.getElementById('synthStatus');
+    if (!el) return;
+    el.dataset.state = state;
+    el.textContent = text;
+  }
+
+  function setTraceMeta(rows) {
+    const el = document.getElementById('synthMeta');
+    if (!el) return;
+    el.innerHTML = rows
+      .map(([k, v]) => `<div class="trace-row"><dt>${k}</dt><dd>${v}</dd></div>`)
+      .join('');
+    el.hidden = rows.length === 0;
+  }
+
   async function runDeliberation(activePresetKey) {
     const promptEl = document.getElementById('wbPrompt');
     const modeEl = document.getElementById('wbMode');
@@ -623,10 +642,17 @@
         });
         const d = await r.json();
         if (!r.ok || d.error) throw new Error(d.error?.message || `HTTP ${r.status}`);
-        outEl.textContent =
-          `[LIVE ZOTHOS :8147 DELIBERATION | minds=${d.agents_spawned} | agreement=${d.agreement} | P_stop=${d.stop_confidence} | stopped_by=${d.stopped_by}]\n` +
-          `[codex=${(d.codex_domains || meta.domains).join(', ')} | zoth_tools=${(d.zoth_tools || meta.tools).map((x) => x.id).join(', ')}]\n\n` +
-          d.text;
+        setConsoleStatus('live', `live · zothos :8147 · ${d.agents_spawned} minds · stopped_by=${d.stopped_by}`);
+        setTraceMeta([
+          ['Route', `local ZothOS daemon · ${endpoint}`],
+          ['Minds convened', String(d.agents_spawned)],
+          ['Lexical agreement', String(d.agreement)],
+          ['Beta P(stop)', String(d.stop_confidence)],
+          ['Stopped by', String(d.stopped_by)],
+          ['Codex injected', (d.codex_domains || meta.domains).join(' + ')],
+          ['Zoth tools routed', (d.zoth_tools || meta.tools).map((x) => x.id).join(', ')]
+        ]);
+        outEl.textContent = d.text;
         btn.disabled = false;
         btn.textContent = 'Convene Pantheon';
         return;
@@ -700,10 +726,17 @@
         });
         const sj = await synthResp.json();
         const finalTxt = (sj.choices?.[0]?.message?.content || answers[0] || '').trim();
-        outEl.textContent =
-          `[LIVE BYOK DELIBERATION | scouts=${answers.length} | lexical_agreement=${agreement.toFixed(3)} | model=${wireModel}]\n` +
-          `[codex=${meta.domains.join(', ')} | zoth_tools=${meta.tools.map((t) => t.id).join(', ')}]\n\n` +
-          finalTxt;
+        setConsoleStatus('live', `live · byok · ${answers.length} scouts · agreement=${agreement.toFixed(3)}`);
+        setTraceMeta([
+          ['Route', `BYOK · ${base}`],
+          ['Backbone', wireModel],
+          ['Scouts convened', String(answers.length)],
+          ['Lexical agreement', agreement.toFixed(3)],
+          ['Co-prime stride', `${meta.stride} · gcd(${meta.stride}, 3456) = 1`],
+          ['Codex injected', meta.domains.join(' + ')],
+          ['Zoth tools routed', meta.tools.map((t) => t.id).join(', ')]
+        ]);
+        outEl.textContent = finalTxt;
         btn.disabled = false;
         btn.textContent = 'Convene Pantheon';
         return;
@@ -714,22 +747,34 @@
 
     // Path C: Instantaneous Deterministic Co-Prime + Codex + Zoth Arsenal Synthesis Preview
     const matchedPreset = Object.values(PRESETS).find((p) => p.prompt.trim() === prompt);
-    const header =
-      `[DETERMINISTIC PANTHEON TRACE · OFFLINE PREVIEW | Connect :8147 on ZothOS or BYOK API Key above for live LLM inference]\n` +
-      `[SHA-256 Co-Prime Walk: start=${meta.start}, stride=${meta.stride}, gcd(${meta.stride}, 3456)=1 | Beta P(leader)=${meta.conf.toFixed(4)} >= 0.95]\n` +
-      `[Injected Canons: ${meta.domains.join(' + ')} | Routed Zoth Tools: ${meta.tools.map((t) => `${t.id}(${t.port})`).join(', ')}]\n\n`;
+    const firstLens = meta.lenses[0];
+    setConsoleStatus('preview', 'offline preview · deterministic · zero network egress');
+    setTraceMeta([
+      ['Route', 'deterministic Pantheon trace (no wire attached)'],
+      ['Co-prime start', String(meta.start)],
+      ['Co-prime stride', `${meta.stride} · gcd(${meta.stride}, 3456) = 1`],
+      ['Pantheon space', '3,456 co-prime lenses'],
+      ['Beta P(leader)', `${meta.conf.toFixed(4)} ≥ 0.95`],
+      ['First lens', `#${String(firstLens.index).padStart(4, '0')} ${firstLens.signature}`],
+      ['Lenses shown', String(meta.lenses.length)],
+      ['Codex injected', meta.domains.join(' + ')],
+      ['Zoth tools routed', meta.tools.map((t) => `${t.id}:${t.port}`).join(', ')]
+    ]);
 
     if (matchedPreset) {
-      outEl.textContent = header + matchedPreset.synthesis;
+      outEl.textContent = matchedPreset.synthesis;
     } else {
       outEl.textContent =
-        header +
-        `SYNTHESIS PLAN FOR CUSTOM PROMPT:\n` +
-        `1. Scout Fan-Out: Wave 1 dispatches 8 DeepSeek Flash (deepseek/deepseek-v4.1-flash) minds via Nous Hermes starting at lens #${meta.lenses[0].index} (${meta.lenses[0].signature}) with co-prime stride ${meta.stride}.\n` +
-        `2. Codex Enforcement: Injects [${meta.domains.join(', ')}] axioms into every scout system prompt and the deepseek/deepseek-v4-pro synthesis collapse.\n` +
-        `3. ZothOS / Zoth Studio Arsenal Augmentation:\n` +
-        meta.tools.map((t) => `   - ${t.name} (${t.port}): $ ${t.cli}`).join('\n') +
-        `\n4. Run Locally with Real Inference:\n   $ zoth-egregore run ${JSON.stringify(prompt.slice(0, 90))}`;
+        `SYNTHESIS PLAN — custom prompt, deterministic preview\n\n` +
+        `1. Scout fan-out — wave 1 dispatches 8 deepseek/deepseek-v4.1-flash minds through Nous Hermes,\n` +
+        `   entering the Pantheon at lens #${firstLens.index} (${firstLens.signature})\n` +
+        `   and stepping by the co-prime stride ${meta.stride}.\n` +
+        `2. Codex enforcement — [${meta.domains.join(' + ')}] axioms are injected into every scout\n` +
+        `   system prompt and into the deepseek/deepseek-v4-pro synthesis collapse.\n` +
+        `3. Arsenal augmentation — the routed ZothOS / Zoth Studio tools below are callable\n` +
+        `   natively by the synthesizing mind:\n` +
+        meta.tools.map((t) => `     - ${t.name} (${t.port})\n       $ ${t.cli}`).join('\n') +
+        `\n4. Escalate to real inference —\n   $ zoth-egregore run ${JSON.stringify(prompt.slice(0, 90))}`;
     }
 
     btn.disabled = false;
@@ -751,7 +796,7 @@
             <span>${t.port}</span>
           </div>
           <h3>${t.name}</h3>
-          <p style="margin:0;color:var(--muted);font-size:14px">${t.summary}</p>
+          <p class="arsenal-desc">${t.summary}</p>
         </div>
         <div class="tool-match-cli">$ ${t.cli}</div>
       </article>`
